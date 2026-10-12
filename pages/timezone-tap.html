@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timezone Tap</title>
+</head>
+<body>
+    <h2>Time Zone</h2>
+
+<h3>What is it?</h3>
+<p>
+  A time zone identifies the time standard used by a visitor's device.
+  JavaScript can detect the visitor's time zone, such as America/Chicago.
+</p>
+
+<h3>When would you use it?</h3>
+<p>
+  A website could use time zone information when displaying events,
+  appointments, deadlines, or schedules.
+</p>
+
+<h3>Why would you use it?</h3>
+<p>
+  It allows a website to display dates and times correctly for the
+  visitor without requiring them to manually select their time zone.
+</p>
+
+<h3>How does JavaScript access it?</h3>
+<p>
+  JavaScript can access the time zone using the Intl.DateTimeFormat API.
+</p>
+
+<h3>Demo - shows our time zone</h3>
+<p id="timeZoneResult">Detecting your time zone...</p>
+
+<h2>Tap</h2>
+
+<h3>What is it?</h3>
+<p>
+  A tap is a touchscreen interaction where a user touches and releases
+  an element on the screen.
+</p>
+
+<h3>When would you use it?</h3>
+<p>
+  Taps are used for buttons, menus, navigation, games, and other
+  interactive elements on mobile devices.
+</p>
+
+<h3>Why would you use it?</h3>
+<p>
+  Tapping is how users can interact with websites on
+  phones and tablets.
+</p>
+
+<h3>How does JavaScript access it?</h3>
+<p>
+  JavaScript can respond to a tap using events such as click,
+  pointer events, or touch events.
+</p>
+
+<h3>Demo - counts how many times the button has been tapped/clicked</h3>
+
+<button id="tapButton">Tap Me!</button>
+<p id="tapResult">Taps: 0</p>
+
+
+<script>
+  // TIME ZONE
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  document.getElementById('timeZoneResult').textContent =
+    'Your time zone: ' + timeZone;
+
+  console.log('Time Zone:', timeZone);
+
+  sessionStorage.setItem('timeZone', timeZone);
+
+    // TAP
+  let taps = 0;
+
+  const tapButton = document.getElementById('tapButton');
+  const tapResult = document.getElementById('tapResult');
+
+  tapButton.addEventListener('click', function () {
+    taps++;
+
+    tapResult.textContent = 'Taps: ' + taps;
+
+    console.log('Tap detected!');
+    console.log('Total taps:', taps);
+
+    sessionStorage.setItem('tapCount', taps);
+  });
+
+    // get existing array OR start a new one
+  const teams = JSON.parse(sessionStorage.getItem('teams')) || [];
+
+  // add this team
+  teams.push({
+    name1: 'Anna McFerrin',
+    name2: 'PARTNER NAME',
+    page: 'YOUR-FILE-NAME.html'
+  });
+
+  // save the updated array
+  sessionStorage.setItem(
+    'teams',
+    JSON.stringify(teams)
+  );
+  </script>
+
+</body>
+</html>
+</body>
+</html>
