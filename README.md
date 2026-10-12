@@ -1,2 +1,2 @@
 # dev-charlie-game
-CIS 376 game 
+fall 2026 CIS 376 lab game 
