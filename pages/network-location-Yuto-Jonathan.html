@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Network Status and Location</title>
+</head>
+
+<body>
+
+    <h1>Network Status and Location</h1>
+
+    <!-- Network Status -->
+    <h2>Network Status</h2>
+
+    <p><strong>What is it?</strong> Checks if the device is online or offline.</p>
+
+    <p><strong>When to use it?</strong> When a website needs to know the connection status.</p>
+
+    <p><strong>Why use it?</strong> To tell the user when the connection is lost.</p>
+
+    <h3>Demo</h3>
+    <p id="networkStatus"></p>
+
+
+    <!-- Location -->
+    <h2>Location</h2>
+
+    <p><strong>What is it?</strong> Gets the user's geographic location.</p>
+
+    <p><strong>When to use it?</strong> For maps, weather, or nearby places.</p>
+
+    <p><strong>Why use it?</strong> To provide services based on the user's location.</p>
+
+    <h3>Demo</h3>
+
+    <button id="locationBtn">Get My Location</button>
+
+    <p id="locationResult"></p>
+
+
+    <script>
+
+        // Network Status
+        const status = navigator.onLine;
+
+        document.getElementById("networkStatus").textContent =
+            status ? "Online" : "Offline";
+
+        console.log("Network Status:", status);
+
+
+        // Save Network Status
+        sessionStorage.setItem("networkStatus", status);
+
+        const savedStatus = sessionStorage.getItem("networkStatus");
+
+        console.log("Saved Network Status:", savedStatus);
+
+
+        // Location
+        document.getElementById("locationBtn").addEventListener("click", function() {
+
+            navigator.geolocation.getCurrentPosition(function(position) {
+
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                document.getElementById("locationResult").textContent =
+                    "Latitude: " + latitude + ", Longitude: " + longitude;
+
+                console.log("Latitude:", latitude);
+                console.log("Longitude:", longitude);
+
+            });
+
+        });
+
+
+        // get existing array OR start a new one
+        const teams = JSON.parse(sessionStorage.getItem('teams')) || [];
+
+        // add this team
+        teams.push({
+            name1: 'Yuto',
+            name2: 'Jonathan',
+            page: 'network-location-Yuto-Jonathan.html'
+        });
+
+        // save the updated array
+        sessionStorage.setItem(
+            'teams',
+            JSON.stringify(teams)
+        );
+
+    </script>
+
+</body>
+
+</html>
