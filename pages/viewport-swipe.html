@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab Charlie - Viewport and Swipe</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    section {
+      border: 1px solid #999;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    #swipeArea {
+      background: #eee;
+      padding: 45px 10px;
+      text-align: center;
+      border-radius: 8px;
+      touch-action: pan-y;
+      user-select: none;
+    }
+
+    button {
+      padding: 10px 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lab Charlie: What Does the App Know?</h1>
+
+  <p>
+    This page demonstrates browser viewport information
+    and mobile swipe interactions.
+  </p>
+
+  <section>
+    <h2>Topic 1: Viewport Size</h2>
+
+    <p><strong>What:</strong> The width and height of the
+      visible browser area.</p>
+
+    <p><strong>When:</strong> When a website needs to adapt
+      its layout to the available screen space.</p>
+
+    <p><strong>Why:</strong> To help make a website responsive
+      on phones, tablets, and computers.</p>
+
+    <p><strong>How:</strong> JavaScript reads
+      window.innerWidth and window.innerHeight.</p>
+
+    <p id="viewportResult">Loading viewport information...</p>
+  </section>
+
+  <section>
+    <h2>Topic 2: Swipe Interaction</h2>
+
+    <p><strong>What:</strong> A finger movement across
+      a touchscreen.</p>
+
+    <p><strong>When:</strong> When users navigate a gallery,
+      carousel, or mobile interface.</p>
+
+    <p><strong>Why:</strong> To provide a natural touch
+      interaction.</p>
+
+    <p><strong>How:</strong> JavaScript compares touch
+      starting and ending positions.</p>
+
+    <div id="swipeArea">
+      Swipe left or right here on your phone.
+      <p id="swipeResult">No swipe detected yet.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Session Storage</h2>
+    <p id="savedResult">Checking saved information...</p>
+    <button id="showSaved">Show Saved Information</button>
+    <button id="clearSaved">Clear Saved Information</button>
+  </section>
+
+  <script>
+    // TOPIC 1: Read the browser viewport.
+    const viewportResult = document.getElementById("viewportResult");
+
+    function updateViewport() {
+      const viewport = {
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+
+      viewportResult.textContent =
+        `Viewport width: ${viewport.width}px, ` +
+        `height: ${viewport.height}px`;
+
+      console.log("Viewport information:", viewport);
+
+      // Store the latest viewport information.
+      sessionStorage.setItem(
+        "viewport",
+        JSON.stringify(viewport)
+      );
+    }
+
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+
+    // TOPIC 2: Detect a horizontal swipe.
+    const swipeArea = document.getElementById("swipeArea");
+    const swipeResult = document.getElementById("swipeResult");
+
+    let startX = 0;
+    let startY = 0;
+
+    swipeArea.addEventListener("touchstart", function(event) {
+      const touch = event.changedTouches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+    });
+
+    swipeArea.addEventListener("touchend", function(event) {
+      const touch = event.changedTouches[0];
+      const differenceX = touch.clientX - startX;
+      const differenceY = touch.clientY - startY;
+
+      // Require a clear horizontal movement of at least 50px.
+      if (
+        Math.abs(differenceX) >= 50 &&
+        Math.abs(differenceX) > Math.abs(differenceY)
+      ) {
+        const direction = differenceX > 0 ? "right" : "left";
+
+        swipeResult.textContent = `You swiped ${direction}!`;
+
+        console.log("Swipe detected:", {
+          direction: direction,
+          distance: Math.round(Math.abs(differenceX)) + "px"
+        });
+
+        sessionStorage.setItem("lastSwipe", direction);
+      }
+    });
+
+    // Save an example visitor object.
+    const visitor = {
+      viewport: JSON.parse(sessionStorage.getItem("viewport")),
+      lastSwipe: sessionStorage.getItem("lastSwipe")
+    };
+
+    sessionStorage.setItem("visitor", JSON.stringify(visitor));
+
+    // Display stored information when requested.
+    document.getElementById("showSaved").addEventListener("click", function() {
+      const savedVisitor = JSON.parse(
+        sessionStorage.getItem("visitor")
+      );
+
+      const savedSwipe = sessionStorage.getItem("lastSwipe");
+
+      document.getElementById("savedResult").textContent =
+        "Saved viewport: " +
+        (savedVisitor?.viewport
+          ? savedVisitor.viewport.width + " x " +
+            savedVisitor.viewport.height
+          : "None") +
+        ". Last swipe: " + (savedSwipe || "None");
+
+      console.log("Saved visitor information:", savedVisitor);
+    });
+
+    document.getElementById("clearSaved").addEventListener("click", function() {
+      sessionStorage.removeItem("visitor");
+      sessionStorage.removeItem("viewport");
+      sessionStorage.removeItem("lastSwipe");
+
+      document.getElementById("savedResult").textContent =
+        "Saved information cleared. Reload to collect viewport data again.";
+
+      console.log("Lab storage cleared.");
+    });
+
+    // REQUIRED CLASS SYNTAX: save the team in an array.
+    const teams = JSON.parse(sessionStorage.getItem("teams")) || [];
+
+    // Avoid adding the same team again on every page load.
+    const alreadyAdded = teams.some(
+      team => team.page === "viewport-swipe.html"
+    );
+
+    if (!alreadyAdded) {
+      teams.push({
+        name1: "Jacobe",
+        page: "viewport-swipe.html"
+      });
+    }
+
+    sessionStorage.setItem("teams", JSON.stringify(teams));
+
+    console.log("Saved teams:", teams);
+  </script>
+</body>
+</html>
